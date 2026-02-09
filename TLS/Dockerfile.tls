@@ -1,0 +1,23 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Install OpenSSL for certificate generation
+RUN apt-get update && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY app_tls.py .
+
+# # Create certs directory and generate certificate
+# RUN mkdir -p certs && \
+#     openssl req -x509 -newkey rsa:4096 -keyout certs/key.pem -out certs/cert.pem \
+#     -days 365 -nodes -subj "/C=US/ST=Washington/L=Seattle/O=F5Testing/CN=*.labtestdemo.com"
+
+# Copy existing certificates
+COPY certs/ ./certs/
+
+EXPOSE 8443
+
+CMD ["uvicorn", "app_tls:app", "--host", "0.0.0.0", "--port", "8443", "--ssl-keyfile=./certs/key.pem", "--ssl-certfile=./certs/cert.pem"]
