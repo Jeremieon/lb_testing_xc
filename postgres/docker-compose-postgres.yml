@@ -1,50 +1,6 @@
 version: '3.8'
 
 services:
-  redirect-app:
-    build:
-      context: "./redirect"
-      dockerfile: Dockerfile.redirect
-    container_name: f5-redirect-app
-    ports:
-      - "8001:8001"
-    networks:
-      - f5net
-    restart: unless-stopped
-
-  crud-app:
-    build:
-      context: "./crud"
-      dockerfile: Dockerfile.crud
-    container_name: f5-crud-app
-    ports:
-      - "8002:8002"
-    networks:
-      - f5net
-    restart: unless-stopped
-
-  routing-app:
-    build:
-      context: "./routes"
-      dockerfile: Dockerfile.routes
-    container_name: f5-routing-app
-    ports:
-      - "8003:8003"
-    networks:
-      - f5net
-    restart: unless-stopped
-
-  tls-app:
-    build:
-      context: "./TLS"
-      dockerfile: Dockerfile.tls
-    container_name: f5-tls-app
-    ports:
-      - "8443:8443"
-    networks:
-      - f5net
-    restart: unless-stopped
-
   postgres-1:
     build:
       context: .
@@ -82,7 +38,7 @@ services:
 volumes:
   postgres1-data:
   postgres2-data:
-  
+
 networks:
   f5net:
     driver: bridge
